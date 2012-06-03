@@ -7,3 +7,10 @@
     %script{ :type => "text/javascript", :src => "/javascripts/gmaps.js" }
   %body
     %h1 Bisect Map
+    #map{ :style => 'height:400px;' }
+    :javascript
+      new GMaps({
+        div: '#map',
+        lat: 32.710719,
+        lng: -117.167945
+      });
