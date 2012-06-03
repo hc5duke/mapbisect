@@ -8,9 +8,57 @@
   %body
     %h1 Bisect Map
     #map{ :style => 'height:400px;' }
+    #instructions{ :style => 'height:100px;' }
     :javascript
-      new GMaps({
-        div: '#map',
-        lat: 32.710719,
-        lng: -117.167945
+      var llSanDiego = [32.710719, -117.167945];
+      var llSanFrancisco = [37.789828, -122.402072];
+      var paths = [llSanDiego];
+      $(function($) {
+        var map = new GMaps({
+          div: '#map',
+          lat: 35.5,
+          lng: -117.167945,
+          zoom: 6
+        });
+        var step = function(e) {
+          paths.unshift([e.path[0].lat(), e.path[0].lng()]);
+          var first = e.path[0];
+          var last = e.path[e.path.length - 1];
+          var path = [first, last];
+          if (e.path.length > 5) {
+            var mid = e.path[Math.floor(e.path.length / 3)];
+            paths.unshift([mid.lat(), mid.lng()]);
+            var mid2 = e.path[Math.floor(2 * e.path.length / 3)];
+            paths.unshift([mid2.lat(), mid2.lng()]);
+            path = [first, mid, mid2, last];
+          } else if (e.path.length > 2) {
+            var mid = e.path[Math.floor(e.path.length / 2)];
+            paths.unshift([mid.lat(), mid.lng()]);
+            path = [first, mid, last];
+          }
+          map.drawPolyline({
+            path: path,
+            strokeColor: '#131540',
+            strokeOpacity: 0.6,
+            strokeWeight: 6
+          });
+        };
+        var success = function() {
+          var params = {
+            paths: paths,
+            dist: 10,
+            pop: 100000,
+            start: 0.4,
+            end: 0.6
+          };
+          $.post('/bisect', params, function(x){console.log(x)});
+        };
+        map.travelRoute({
+          origin: llSanDiego,
+          destination: llSanFrancisco,
+          travelMode: 'driving',
+          step: step,
+          success: success,
+        });
       });
+

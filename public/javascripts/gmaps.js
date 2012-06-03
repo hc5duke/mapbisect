@@ -774,8 +774,8 @@ var GMaps = (function($) {
       }
 
       var base_options = {
-        avoidHighways: true,
-        avoidTolls: true,
+        avoidHighways: false,
+        avoidTolls: false,
         optimizeWaypoints: true,
         waypoints: []
       };
@@ -840,6 +840,9 @@ var GMaps = (function($) {
                 for (var i=0, step; step=steps[i]; i++) {
                   step.step_number = i;
                   options.step(step);
+                }
+                if (options.success) {
+                  options.success();
                 }
               }
             }
