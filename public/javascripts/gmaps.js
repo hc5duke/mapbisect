@@ -669,6 +669,9 @@ var GMaps = (function($) {
                   step.step_number = i;
                   options.step(step);
                 }
+                if (options.success) {
+                  options.success();
+                }
               }
             }
           }
