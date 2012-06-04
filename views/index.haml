@@ -21,13 +21,14 @@
         experiment by
         %a{ :href => 'http://hc5duke.com' } @hc5duke
     .row
-      .span4
+      .span6
         %form.form-horizontal
           %fieldset
             .control-group
               %label.control-label{ :for => 'origin' } From:
               .controls
                 %input#origin.input-xlarge{ :value => "32.710719, -117.167945" }
+                %br
                 %a{:href => 'javascript:setLatLong("san francisco", "origin");'} SF
                 %a{:href => 'javascript:setLatLong("san jose", "origin");'} SJ
                 %a{:href => 'javascript:setLatLong("los angeles", "origin");'} LA
@@ -39,6 +40,7 @@
               %label.control-label{ :for => 'destin' } To:
               .controls
                 %input#destin.input-xlarge{ :value => "37.789828, -122.402072" }
+                %br
                 %a{:href => 'javascript:setLatLong("san francisco", "destin");'} SF
                 %a{:href => 'javascript:setLatLong("san jose", "destin");'} SJ
                 %a{:href => 'javascript:setLatLong("los angeles", "destin");'} LA
@@ -66,9 +68,11 @@
                 %label.radio.inline{ :for => 'progress75' }
                   %input#progress75{ :value => "75", :name => "progress", :type => "radio" }
                   75%
-        %input#submit.btn.btn-large.btn-primary{ :value => "Go! Go! Go!", :type => "button" }
-      .span4
+        .form-actions
+          %input#submit.btn.btn-large.btn-primary{ :value => "Go! Go! Go!", :type => "button" }
+      .span6
+        #map{ :style => 'width:100%;height:500px;' }
+    .row
+      .span8
         #instructions.left
           %i Stuff will go here
-    .row
-      #map{ :style => 'width:500px;height:500px;' }
