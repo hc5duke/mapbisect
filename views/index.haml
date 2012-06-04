@@ -9,36 +9,50 @@
     :css
       .left { float: left; }
       .clear { clear: both; }
+      .field { border: 1px dotted blue;padding:20px;}
   %body
     %h1 Bisect Map
     .left
-      From:
-      %input#origin{ :value => "32.710719, -117.167945", :size => "30" }
-    .left
-      To:
-      %input#destin{ :value => "37.789828, -122.402072", :size => "30" }
-    .clear
-    .left
-      Max Distance (miles):
-      %input#dist{ :value => "20", :size => "30" }
-    .left
-      Min Population:
-      %input#pop{ :value => "100000", :size => "30" }
-    .clear
-    .left
-      Approximate Progress:
-      .progress
-        %input#progress25{ :value => "25", :name => "progress", :type => "radio" }
-        %label{ :for => 'progress25' } 25%
-      .progress
-        %input#progress50{ :value => "50", :name => "progress", :type => "radio", :checked => 'true' }
-        %label{ :for => 'progress50' } 50%
-      .progress
-        %input#progress75{ :value => "75", :name => "progress", :type => "radio" }
-        %label{ :for => 'progress75' } 75%
-    .clear
-    %input#submit{ :value => "go!", :type => "button" }
-    .clear
+      .field
+        From:
+        %input#origin{ :value => "32.710719, -117.167945", :size => "30" }
+        %br
+        %a{:href => 'javascript:setLatLong("san francisco", "origin");'} SF
+        %a{:href => 'javascript:setLatLong("san jose", "origin");'} SJ
+        %a{:href => 'javascript:setLatLong("los angeles", "origin");'} LA
+        %a{:href => 'javascript:setLatLong("san diego", "origin");'} SD
+        %a{:href => 'javascript:setLatLong("sacramento", "origin");'} Sac
+        %a{:href => 'javascript:setLatLong("fresno", "origin");'} Fresno
+        %a{:href => 'javascript:setLatLong("oakland", "origin");'} Oakland
+      .field
+        To:
+        %input#destin{ :value => "37.789828, -122.402072", :size => "30" }
+        %br
+        %a{:href => 'javascript:setLatLong("san francisco", "destin");'} SF
+        %a{:href => 'javascript:setLatLong("san jose", "destin");'} SJ
+        %a{:href => 'javascript:setLatLong("los angeles", "destin");'} LA
+        %a{:href => 'javascript:setLatLong("san diego", "destin");'} SD
+        %a{:href => 'javascript:setLatLong("sacramento", "destin");'} Sac
+        %a{:href => 'javascript:setLatLong("fresno", "destin");'} Fresno
+        %a{:href => 'javascript:setLatLong("oakland", "destin");'} Oakland
+      .field
+        Max Distance (miles):
+        %input#dist{ :value => "20", :size => "30" }
+      .field
+        Min Population:
+        %input#pop{ :value => "100000", :size => "30" }
+      .field
+        Approximate Progress:
+        .progress
+          %input#progress25{ :value => "25", :name => "progress", :type => "radio" }
+          %label{ :for => 'progress25' } 25%
+        .progress
+          %input#progress50{ :value => "50", :name => "progress", :type => "radio", :checked => 'true' }
+          %label{ :for => 'progress50' } 50%
+        .progress
+          %input#progress75{ :value => "75", :name => "progress", :type => "radio" }
+          %label{ :for => 'progress75' } 75%
+      %input#submit{ :value => "go!", :type => "button" }
     #map.left{ :style => 'width:500px;height:500px;' }
     #instructions.left
     .clear

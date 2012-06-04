@@ -11,6 +11,12 @@ get '/' do
   haml :index, :format => :html5
 end
 
+get '/geocode/:name' do
+  name = params[:name].downcase.gsub(/\b('?[a-z])/) { $1.capitalize }
+  city = Ca::CALIFORNIA[name] || Ca::CALIFORNIA['San Francisco']
+  city[0, 2].join(',')
+end
+
 post '/bisect' do
   cities = {}
   min_pop = (params[:pop] || 100_000).to_i

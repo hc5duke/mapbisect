@@ -7,6 +7,13 @@ var addCommas = function(subject){
   return subject.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 };
 
+var setLatLong = function(city, field) {
+  field = '#' + field;
+  $(field).val('looking up');
+  $.get('/geocode/' + city, function(latlng){
+    $(field).val(latlng);
+  });
+};
 $(function($) {
   var map = new GMaps({
     div: '#map',
@@ -98,8 +105,20 @@ $(function($) {
     $.post('/bisect', params, postResults);
   };
   $('#submit').click(function(){
-    var origin = $('#origin').val().split(',');
-    var destin = $('#destin').val().split(',');
+    var origin = $('#origin').val();
+    var destin = $('#destin').val();
+    if (origin.match(/[a-zA-Z]+/)) {
+      $('#origin').val(llSanDiego.join(','));
+      origin = llSanDiego;
+    } else {
+      origin = origin.split(',');
+    }
+    if (destin.match(/[a-zA-Z]+/)) {
+      $('#destin').val(llSanFrancisco.join(','));
+      destin = llSanFrancisco;
+    } else {
+      destin = destin.split(',');
+    }
     // TODO: geocoding
     // http://maps.googleapis.com/maps/api/geocode/json?address=blah&sensor=false
     paths = [origin];
