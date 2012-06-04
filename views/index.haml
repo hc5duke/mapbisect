@@ -5,24 +5,45 @@
     %script{ :type => "text/javascript", :src => "/javascripts/jquery.min.js" }
     %script{ :type => "text/javascript", :src => "https://maps.google.com/maps/api/js?sensor=true" }
     %script{ :type => "text/javascript", :src => "/javascripts/gmaps.js" }
+    :css
+      .left { float: left; }
+      .clear { clear: both; }
   %body
     %h1 Bisect Map
-    #fromlatlon{ :style => "float:left;" }
+    .left
       From:
       %input#origin{ :value => "32.710719, -117.167945", :size => "30" }
-    #tolatlon{ :style => "float:left;" }
+    .left
       To:
       %input#destin{ :value => "37.789828, -122.402072", :size => "30" }
-    %div{ :style => "clear:left;" }
+    .clear
+    .left
+      Max Distance (miles):
+      %input#dist{ :value => "20", :size => "30" }
+    .left
+      Min Population:
+      %input#pop{ :value => "100000", :size => "30" }
+    .clear
+    .left
+      Approximate Progress:
+      .progress
+        %input#progress25{ :value => "25", :name => "progress", :type => "radio" }
+        25%
+      .progress
+        %input#progress50{ :value => "50", :name => "progress", :type => "radio", :checked => 'true' }
+        50%
+      .progress
+        %input#progress75{ :value => "75", :name => "progress", :type => "radio" }
+        75%
+    .clear
     %input#submit{ :value => "go!", :type => "button" }
     #map{ :style => 'width:500px;height:500px;' }
-    #instructions{ :style => 'height:100px;' }
     :javascript
       var llSanDiego = [32.710719, -117.167945];
       var llSanFrancisco = [37.789828, -122.402072];
       var latCenter = (llSanDiego[0] + llSanFrancisco[0]) / 2;
       var lonCenter = (llSanDiego[1] + llSanFrancisco[1]) / 2;
-      var paths = [llSanDiego];
+      var paths = [];
       $(function($) {
         var map = new GMaps({
           div: '#map',
@@ -54,23 +75,46 @@
           });
         };
         var postResults = function(result) {
-          $('#instructions').text(result);
+          var cities = JSON.parse(result);
+          $.each(cities, function(i, city){
+            var content = '<h2>' + city.name + '</h2>' +
+              '<p><b>Population:</b> ' + city.population + '</p>' +
+              '<p><b>Progress:</b> ' + city.progress.toFixed(2) + '%</p>';
+            map.addMarker({
+              lat: city.latlon[0],
+              lng: city.latlon[1],
+              title: city.name,
+              infoWindow: { content: content }
+            });
+          });
         };
         var success = function() {
+          var dist = $('#dist').val().replace(/[^\d\.]/g, '');
+          var pop  = $('#pop').val().replace(/[^\d\.]/g, '');
+          $('#dist').val(dist);
+          $('#pop').val(pop);
+
+          // TODO: Make this less awkward
+          var prog = Number($('input[name=progress]:checked').val());
+          if (prog != 25 && prog != 75) {
+            prog = 50;
+          }
+
           var params = {
             paths: paths,
-            dist: 20,
-            pop: 100000,
-            start: 0.3,
-            end: 0.7
+            dist: dist,
+            pop: pop,
+            start: (prog - 15) / 100.0,
+            end: (prog + 15) / 100.0
           };
           $.post('/bisect', params, postResults);
         };
         $('#submit').click(function(){
           var origin = $('#origin').val().split(',');
           var destin = $('#destin').val().split(',');
-          // llSanDiego = [32.710719, -117.167945];
-          // llSanFrancisco = [37.789828, -122.402072];
+          // TODO: geocoding
+          // http://maps.googleapis.com/maps/api/geocode/json?address=blah&sensor=false
+          paths = [origin];
           map.travelRoute({
             origin: origin,
             destination: destin,

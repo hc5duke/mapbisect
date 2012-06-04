@@ -14,10 +14,14 @@ end
 post '/bisect' do
   cities = {}
   min_pop = (params[:pop] || 100_000).to_i
-  max_dist = (params[:dist] || 10).to_f / 60
+  min_pop = 20_000 if min_pop < 20_000
+  max_dist = (params[:dist] || 10).to_f
+  max_dist = 200 if max_dist > 200
+  max_dist /= 600 # approximate
   range_start = (params[:start] || 0).to_f
   range_end = (params[:end] || 1).to_f
   paths = params[:paths].map{ |key, value| value.map(&:to_f) }
+  abs_max_dist = Geo.distance(paths.first, paths.last)
   all_cities = Ca::CALIFORNIA.select do |name, value|
     value[2] > min_pop
   end
@@ -39,10 +43,9 @@ post '/bisect' do
   list = cities.map do |name, city|
     d1 = Geo.distance(origin, city)
     d2 = Geo.distance(city, destin)
+    next if [d1, d2].max > abs_max_dist
     progress = d2 / (d1 + d2).to_f
-    if progress <= range_start || progress >= range_end
-      nil
-    else
+    if progress > range_start && progress < range_end
       {
         name: name,
         progress: progress,
