@@ -14,7 +14,7 @@ end
 post '/bisect' do
   cities = {}
   min_pop = (params[:pop] || 100_000).to_i
-  max_dist = (params[:dist] || 40).to_f / 60
+  max_dist = (params[:dist] || 10).to_f / 60
   range_start = (params[:start] || 0).to_f
   range_end = (params[:end] || 1).to_f
   paths = params[:paths].map{ |key, value| value.map(&:to_f) }
@@ -29,9 +29,6 @@ post '/bisect' do
       next if cities.include?(name)
       next unless Geo.distance(origin, destin) > 0.2
       next unless Geo.within(origin, destin, value, max_dist)
-      distance = Geo.line_distance(origin, destin, value)
-      xx = Geo.distance(origin, destin)
-      puts [xx, name, distance, value, origin, destin].inspect
       cities[name] = value
     end
   end
@@ -48,10 +45,10 @@ post '/bisect' do
     else
       {
         name: name,
-        #progress: progress,
+        progress: progress,
         population: city[2],
         latlon: city[0, 2],
-        #distances: [d1, d2],
+        distances: [d1, d2],
       }
     end
   end.compact

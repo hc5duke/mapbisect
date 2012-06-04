@@ -7,6 +7,14 @@
     %script{ :type => "text/javascript", :src => "/javascripts/gmaps.js" }
   %body
     %h1 Bisect Map
+    #fromlatlon{ :style => "float:left;" }
+      From:
+      %input#origin{ :value => "32.710719, -117.167945", :size => "30" }
+    #tolatlon{ :style => "float:left;" }
+      To:
+      %input#destin{ :value => "37.789828, -122.402072", :size => "30" }
+    %div{ :style => "clear:left;" }
+    %input#submit{ :value => "go!", :type => "button" }
     #map{ :style => 'width:500px;height:500px;' }
     #instructions{ :style => 'height:100px;' }
     :javascript
@@ -45,22 +53,31 @@
             strokeWeight: 6
           });
         };
+        var postResults = function(result) {
+          $('#instructions').text(result);
+        };
         var success = function() {
           var params = {
             paths: paths,
-            dist: 10,
+            dist: 20,
             pop: 100000,
-            start: 0.4,
-            end: 0.6
+            start: 0.3,
+            end: 0.7
           };
-          $.post('/bisect', params, function(x){console.log(x)});
+          $.post('/bisect', params, postResults);
         };
-        map.travelRoute({
-          origin: llSanDiego,
-          destination: llSanFrancisco,
-          travelMode: 'driving',
-          step: step,
-          success: success,
+        $('#submit').click(function(){
+          var origin = $('#origin').val().split(',');
+          var destin = $('#destin').val().split(',');
+          // llSanDiego = [32.710719, -117.167945];
+          // llSanFrancisco = [37.789828, -122.402072];
+          map.travelRoute({
+            origin: origin,
+            destination: destin,
+            travelMode: 'driving',
+            step: step,
+            success: success,
+          });
         });
       });
 
