@@ -2,16 +2,17 @@
 
 %html
   %head
+    %link{ :href => "/css/bootstrap.min.css", :rel => "stylesheet", :type => "text/css" }
     %script{ :type => "text/javascript", :src => "/javascripts/jquery.min.js" }
     %script{ :type => "text/javascript", :src => "/javascripts/bootstrap.min.js" }
     %script{ :type => "text/javascript", :src => "https://maps.google.com/maps/api/js?sensor=true" }
     %script{ :type => "text/javascript", :src => "/javascripts/gmaps.js" }
     %script{ :type => "text/javascript", :src => "/javascripts/b.js" }
-    %link{ :href => "/css/bootstrap.min.css", :rel => "stylesheet", :type => "text/css" }
     :css
       .left { float: left; }
       .clear { clear: both; }
       .field { border: 1px dotted blue;padding:20px;}
+      #map img { max-width: none; }
   %body
     .hero-unit
       %h1 Bisect Map
@@ -27,7 +28,7 @@
             .control-group
               %label.control-label{ :for => 'origin' } From:
               .controls
-                %input#origin.input-xlarge{ :value => "32.710719, -117.167945" }
+                %input#origin.input-xlarge{ :value => "32.710719, -117.167945", 'data-content' => "Currently only works with cities in California", 'data-original-title' => "Note" }
                 %br
                 %a{:href => 'javascript:setLatLong("san francisco", "origin");'} SF
                 %a{:href => 'javascript:setLatLong("san jose", "origin");'} SJ
@@ -39,7 +40,7 @@
             .control-group
               %label.control-label{ :for => 'destin' } To:
               .controls
-                %input#destin.input-xlarge{ :value => "37.789828, -122.402072" }
+                %input#destin.input-xlarge{ :value => "37.789828, -122.402072", 'data-content' => "Currently only works with cities in California", 'data-original-title' => "Note" }
                 %br
                 %a{:href => 'javascript:setLatLong("san francisco", "destin");'} SF
                 %a{:href => 'javascript:setLatLong("san jose", "destin");'} SJ
@@ -49,13 +50,14 @@
                 %a{:href => 'javascript:setLatLong("fresno", "destin");'} Fr
                 %a{:href => 'javascript:setLatLong("oakland", "destin");'} Oak
             .control-group
-              %label.control-label{ :for => 'dist' } Max. Distance (miles):
+              %label.control-label{ :for => 'dist' }
+                Max. Distance (miles):
               .controls
-                %input#dist.input-xlarge{ :value => "20" }
+                %input#dist.input-xlarge{ :value => "20", 'data-content' => "Distances are a bit buggy right now.", 'data-original-title' => "Note" }
             .control-group
               %label.control-label{ :for => 'pop' } Min. Population:
               .controls
-                %input#pop.input-xlarge{ :value => "100000" }
+                %input#pop.input-xlarge{ :value => "50000" }
             .control-group
               %label.control-label{ :for => 'progress' } Approx. Progress
               .controls

@@ -137,5 +137,8 @@ $(function($) {
       success: success,
     });
   });
+  $('#origin').popover({});
+  $('#destin').popover({});
+  $('#dist').popover({});
 });
 
