@@ -7,17 +7,19 @@
     %script{ :type => "text/javascript", :src => "/javascripts/gmaps.js" }
   %body
     %h1 Bisect Map
-    #map{ :style => 'height:400px;' }
+    #map{ :style => 'width:500px;height:500px;' }
     #instructions{ :style => 'height:100px;' }
     :javascript
       var llSanDiego = [32.710719, -117.167945];
       var llSanFrancisco = [37.789828, -122.402072];
+      var latCenter = (llSanDiego[0] + llSanFrancisco[0]) / 2;
+      var lonCenter = (llSanDiego[1] + llSanFrancisco[1]) / 2;
       var paths = [llSanDiego];
       $(function($) {
         var map = new GMaps({
           div: '#map',
-          lat: 35.5,
-          lng: -117.167945,
+          lat: latCenter,
+          lng: lonCenter,
           zoom: 6
         });
         var step = function(e) {
