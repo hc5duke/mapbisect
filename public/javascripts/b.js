@@ -3,6 +3,10 @@ var llSanFrancisco = [37.789828, -122.402072];
 var latCenter = (llSanDiego[0] + llSanFrancisco[0]) / 2;
 var lonCenter = (llSanDiego[1] + llSanFrancisco[1]) / 2;
 var paths = [];
+var addCommas = function(subject){
+  return subject.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+};
+
 $(function($) {
   var map = new GMaps({
     div: '#map',
@@ -34,23 +38,43 @@ $(function($) {
     });
   };
   var postResults = function(result) {
-    var html = '<ul>'
+    var html = [
+      '<table>',
+        '<thead>',
+          '<tr>',
+            '<th>City</th>',
+            '<th>Population</th>',
+            '<th>Progress</th>',
+          '</tr>',
+        '</thead>'
+    ].join('');
     var cities = JSON.parse(result);
     $.each(cities, function(i, city){
       var link = 'https://www.google.com/search?q=site:wikipedia.org+' + city.name + '+California&btnI=745&pws=0';
       var linkedName = '<a href="' + link + '" target="_blank">' + city.name + '</a>';
+      var progress = city.progress.toFixed(2);
+      var population = addCommas(city.population);
       var content = '<h2>' + linkedName + '</h2>' +
-        '<p><b>Population:</b> ' + city.population + '</p>' +
-        '<p><b>Progress:</b> ' + city.progress.toFixed(2) + '%</p>';
+        '<p><b>Population:</b> ' + population + '</p>' +
+        '<p><b>Progress:</b> ' + progress  + '%</p>';
       map.addMarker({
         lat: city.latlon[0],
         lng: city.latlon[1],
         title: city.name,
         infoWindow: { content: content }
       });
-      html += '<li>' + linkedName + '</li>'
+      html += [
+        '<tr>',
+          '<td>', linkedName, '</td>',
+          '<td>', population, '</td>',
+          '<td>', progress, '%</td>',
+        '</tr>'
+      ].join('');
     });
-    $('#instructions').html(html + '</ul>');
+    html += [
+      '</tbody></table>'
+    ].join('');
+    $('#instructions').html(html);
   };
   var success = function() {
     var dist = $('#dist').val().replace(/[^\d\.]/g, '');
