@@ -105,6 +105,13 @@ $(function($) {
     $.post('/bisect', params, postResults);
   };
   $('#submit').click(function(){
+    map = new GMaps({
+      div: '#map',
+      lat: latCenter,
+      lng: lonCenter,
+      zoom: 6
+    });
+
     var origin = $('#origin').val();
     var destin = $('#destin').val();
     if (origin.match(/[a-zA-Z]+/)) {
