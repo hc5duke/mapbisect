@@ -21,11 +21,12 @@ rejects = [
   'South Coast',
   'West Contra Costa',
   'Coachella Valley',
+  'Santa Maria Valley',
   'North Antelope Valley',
 ]
 min_pop = 20_000
 
-cc = city.zip(lats, lons, pops).reject{|arr| rejects.include? arr[0] || arr[3] < min_pop}
+cc = city.zip(lats, lons, pops).reject{|arr| rejects.include?(arr[0]) || arr[3] < min_pop}
 File.open('./data/ca.txt', 'w') do |f|
   cc.each do |arr|
     f.write(arr.join("\t"))
